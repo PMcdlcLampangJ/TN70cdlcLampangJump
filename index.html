@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบสอบถามความต้องการและการพัฒนา - ศพช.ลำปาง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1b365d;
+      --secondary: #c59b27;
+      --accent-bg: #f4f7fb;
+      --card-bg: #ffffff;
+      --text: #2c3e50;
+      --border: #dcdfe6;
+      --error: #d9534f;
+      --success: #2e7d32;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    body {
+      background-color: var(--accent-bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px 12px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      border-top: 6px solid var(--primary);
+    }
+
+    header {
+      padding: 30px;
+      background: linear-gradient(135deg, #1b365d, #0f213d);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffd700;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 16px;
+      color: #e0e6ed;
+    }
+
+    form {
+      padding: 30px;
+    }
+
+    .section-title {
+      background-color: #f0f4f9;
+      border-left: 5px solid var(--primary);
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 35px 0 20px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .sub-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin: 20px 0 10px 0;
+      border-bottom: 2px dashed #eee;
+      padding-bottom: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .limit-hint {
+      font-size: 13px;
+      color: #666;
+      font-weight: normal;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14.5px;
+      cursor: pointer;
+    }
+
+    .option-item input[type="checkbox"],
+    .option-item input[type="radio"] {
+      margin-top: 4px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      min-width: 16px;
+      min-height: 16px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14.5px;
+      transition: border 0.3s;
+      background: #fafafa;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(27, 54, 93, 0.1);
+    }
+
+    .inline-input {
+      border-bottom: 1px solid #999;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+      padding: 2px 8px;
+      background: transparent;
+      display: inline-block;
+      width: calc(100% - 70px);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary), #2a5298);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 30px;
+      box-shadow: 0 4px 10px rgba(27, 54, 93, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    #submission-status {
+      display: none;
+      padding: 16px;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
+    .status-success {
+      background: #e8f5e9;
+      color: var(--success);
+      border: 1px solid #c8e6c9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>แบบสำรวจความต้องการและการพัฒนางาน</h1>
+    <p>ศูนย์ศึกษาและพัฒนาชุมชนลำปาง</p>
+  </header>
+
+  <form id="surveyForm">
+
+    <!-- ==================== ฝ่ายอำนวยการ ==================== -->
+    <div class="section-title">ส่วนที่ 1: ฝ่ายอำนวยการ</div>
+
+    <div class="form-group">
+      <label class="form-label">1. ท่านต้องการให้ ศพช.ลำปาง ดำเนินการพัฒนาในลักษณะใดมากที่สุด <span class="limit-hint">(เลือกได้ไม่เกิน 3 ข้อ)</span></label>
+      <div class="options-list" data-max="3">
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="ปรับปรุงอาคารและสถานที่"> ปรับปรุงอาคารและสถานที่</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="จัดหาอุปกรณ์และสิ่งอำนวยความสะดวกเพิ่มเติม"> จัดหาอุปกรณ์และสิ่งอำนวยความสะดวกเพิ่มเติม</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="พัฒนาคุณภาพอาหารและบริการ"> พัฒนาคุณภาพอาหารและบริการ</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="เพิ่มมาตรการความปลอดภัย"> เพิ่มมาตรการความปลอดภัย</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="พัฒนาคุณภาพเนื้อหาและกิจกรรมฐานเรียนรู้"> พัฒนาคุณภาพเนื้อหาและกิจกรรมฐานเรียนรู้</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="พัฒนาทักษะและมาตรฐานการให้บริการของเจ้าหน้าที่"> พัฒนาทักษะและมาตรฐานการให้บริการของเจ้าหน้าที่</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="นำเทคโนโลยีดิจิทัลมาเพิ่มประสิทธิภาพการให้บริการ"> นำเทคโนโลยีดิจิทัลมาเพิ่มประสิทธิภาพการให้บริการ</label>
+        <label class="option-item"><input type="checkbox" name="admin_q1" value="พัฒนาระบบรับฟังความคิดเห็นและแก้ไขข้อร้องเรียน"> พัฒนาระบบรับฟังความคิดเห็นและแก้ไขข้อร้องเรียน</label>
+        <div class="option-item" style="flex-wrap: wrap;">
+          <label><input type="checkbox" name="admin_q1" value="อื่นๆ"> อื่น ๆ โปรดระบุ:</label>
+          <input type="text" name="admin_q1_other" class="inline-input" placeholder="ระบุเพิ่มเติม...">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">2. หาก ศพช.ลำปาง สามารถดำเนินการปรับปรุงมาตรฐานการให้บริการได้ทันที 1 เรื่อง ท่านต้องการให้ปรับปรุงเรื่องใดมากที่สุด</label>
+      <textarea name="admin_q2" rows="2" placeholder="ระบุเรื่องที่ต้องการให้ปรับปรุงมากที่สุด..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">3. ท่านมีข้อเสนอแนะเพิ่มเติมเพื่อยกระดับมาตรฐานการให้บริการของ ศพช.ลำปาง อย่างไร</label>
+      <textarea name="admin_q3" rows="2" placeholder="ข้อเสนอแนะเพิ่มเติม..."></textarea>
+    </div>
+
+    <div class="sub-section-title">ข้อเสนอแนะรายด้าน</div>
+
+    <div class="form-group">
+      <label class="form-label">1. ด้านห้องฝึกอบรม: ควรมีสิ่งอำนวยความสะดวกหรือเทคโนโลยีใดเพิ่มเติม เพื่อสนับสนุนการเรียนรู้ให้มีประสิทธิภาพมากขึ้น</label>
+      <textarea name="admin_facility_training" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">2. ด้านห้องอาหาร: ควรมีสิ่งอำนวยความสะดวกใดเพิ่มเติม และมีข้อเสนอแนะเกี่ยวกับเมนูอาหารและรูปแบบการให้บริการอย่างไร</label>
+      <textarea name="admin_facility_canteen" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">3. ด้านอาคารที่พัก: สิ่งอำนวยความสะดวกใดในห้องพักมีความจำเป็นต้องปรับปรุงหรือเพิ่มเติมมากที่สุด และมีข้อเสนอแนะอย่างไรเพื่อให้การพักค้างคืนสะดวกสบายขึ้น</label>
+      <textarea name="admin_facility_room" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">4. ด้านความปลอดภัย: ท่านต้องการให้ ศพช.ลำปาง เพิ่มมาตรการหรือบริการด้านความปลอดภัยเรื่องใดเป็นพิเศษ</label>
+      <textarea name="admin_facility_safety" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">5. ด้านฐานเรียนรู้: ท่านต้องการให้เพิ่มกิจกรรมฝึกปฏิบัติจริง กิจกรรมจำลองสถานการณ์ หรือสื่อดิจิทัลรูปแบบใด</label>
+      <textarea name="admin_facility_base" rows="2"></textarea>
+    </div>
+
+
+    <!-- ==================== กลุ่มงานบริการทางวิชาการ ==================== -->
+    <div class="section-title">ส่วนที่ 2: กลุ่มงานบริการทางวิชาการ</div>
+
+    <div class="form-group">
+      <label class="form-label">1. จากภารกิจงานที่ท่านได้รับมอบหมาย งานใดที่ท่านพบปัญหา อุปสรรค มีความกดดัน หรือรู้สึกว่า "ยังขาดความมั่นใจ" ในการปฏิบัติงานมากที่สุด <span class="limit-hint">(เลือกได้สูงสุด 3 ข้อ)</span></label>
+      <div class="options-list" data-max="3">
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การจัดทำและขับเคลื่อนแผนชุมชน / แผนพัฒนาตำบล"> การจัดทำและขับเคลื่อนแผนชุมชน / แผนพัฒนาตำบล</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การพัฒนาและเสริมสร้างศักยภาพผู้นำชุมชน ผู้นำสตรี และแกนนำอช. / อช."> การพัฒนาและเสริมสร้างศักยภาพผู้นำชุมชน ผู้นำสตรี และแกนนำอช. / อช.</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การส่งเสริมและพัฒนาเศรษฐกิจฐานราก ธุรกิจชุมชน และการพัฒนาผลิตภัณฑ์ OTOP"> การส่งเสริมและพัฒนาเศรษฐกิจฐานราก ธุรกิจชุมชน และการพัฒนาผลิตภัณฑ์ OTOP</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การบริหารจัดการกองทุนชุมชน"> การบริหารจัดการกองทุนชุมชน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การขับเคลื่อนการพัฒนาพื้นที่ตามหลักปรัชญาของเศรษฐกิจพอเพียง / โคก หนอง นา / ศูนย์เรียนรู้"> การขับเคลื่อนการพัฒนาพื้นที่ตามหลักปรัชญาของเศรษฐกิจพอเพียง / โคก หนอง นา / ศูนย์เรียนรู้</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การขับเคลื่อนการขจัดความยากจนและการพัฒนาคนทุกช่วงวัย"> การขับเคลื่อนการขจัดความยากจนและการพัฒนาคนทุกช่วงวัย</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การสร้างเครือข่ายและประสานการทำงานร่วมกับ 7 ภาคีเครือข่าย"> การสร้างเครือข่ายและประสานการทำงานร่วมกับ 7 ภาคีเครือข่าย</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การจัดทำและบริหารโครงการงบประมาณตามแผนปฏิบัติราชการ"> การจัดทำและบริหารโครงการงบประมาณตามแผนปฏิบัติราชการ</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การบริหารจัดการและใช้ประโยชน์ข้อมูลสารสนเทศ (กชช.2ค, จปฐ., CDD AI)"> การบริหารจัดการและใช้ประโยชน์ข้อมูลสารสนเทศ (กชช.2ค, จปฐ., CDD AI)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="งานสื่อสาร ประชาสัมพันธ์ และการสร้างภาพลักษณ์ภารกิจ พช."> งานสื่อสาร ประชาสัมพันธ์ และการสร้างภาพลักษณ์ภารกิจ พช.</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="งานกองทุนพัฒนาบทบาทสตรี"> งานกองทุนพัฒนาบทบาทสตรี</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="งานด้านสารบรรณ ธุรการ พัสดุ และการเงิน"> งานด้านสารบรรณ ธุรการ พัสดุ และการเงิน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q1" value="การส่งเสริมกระบวนการมีส่วนร่วม / จัดเวทีประชาคม / วิทยากรกระบวนการ / พิธีกรงานสำคัญ"> การส่งเสริมกระบวนการมีส่วนร่วม / จัดเวทีประชาคม / วิทยากรกระบวนการ / พิธีกรงานสำคัญ</label>
+        <div class="option-item" style="flex-wrap: wrap;">
+          <label><input type="checkbox" name="acad_q1" value="อื่นๆ"> อื่น ๆ:</label>
+          <input type="text" name="acad_q1_other" class="inline-input" placeholder="ระบุ...">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">2. หาก ศพช.ลำปาง จัดทำแผนฝึกอบรมประจำปีงบประมาณต่อไป ท่านต้องการพัฒนาตนเองในด้านใดบ้าง <span class="limit-hint">(เลือกได้สูงสุด 3 ข้อ)</span></label>
+      <div class="options-list" data-max="3">
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านเทคโนโลยีดิจิทัลและปัญญาประดิษฐ์เพื่อการทำงาน (Digital & AI Tools)"> ด้านเทคโนโลยีดิจิทัลและปัญญาประดิษฐ์เพื่อการทำงาน (Digital & AI Tools)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านการพัฒนาและขับเคลื่อนเศรษฐกิจฐานราก / OTOP เชิงพาณิชย์และออนไลน์"> ด้านการพัฒนาและขับเคลื่อนเศรษฐกิจฐานราก / OTOP เชิงพาณิชย์และออนไลน์</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านกระบวนการมีส่วนร่วม วิทยากรกระบวนการ และการถอดบทเรียน / KM"> ด้านกระบวนการมีส่วนร่วม วิทยากรกระบวนการ และการถอดบทเรียน / KM</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านการบริหารจัดการโครงการ / การจัดทำแผนชุมชน"> ด้านการบริหารจัดการโครงการ / การจัดทำแผนชุมชน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านการสื่อสาร การนำเสนอ การสร้างคอนเทนต์ และการประชาสัมพันธ์งานพัฒนาชุมชน"> ด้านการสื่อสาร การนำเสนอ การสร้างคอนเทนต์ และการประชาสัมพันธ์งานพัฒนาชุมชน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านนวัตกรรมชุมชน การคิดเชิงออกแบบ"> ด้านนวัตกรรมชุมชน การคิดเชิงออกแบบ</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านการบริหารความขัดแย้ง ภาวะผู้นำ และการทำงานร่วมกับภาคีเครือข่าย 7 ภาคส่วน"> ด้านการบริหารความขัดแย้ง ภาวะผู้นำ และการทำงานร่วมกับภาคีเครือข่าย 7 ภาคส่วน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q2" value="ด้านการดูแลสุขภาพจิต การบริหารความเครียด และการสร้างแรงบันดาลใจในการทำงาน"> ด้านการดูแลสุขภาพจิต การบริหารความเครียด และการสร้างแรงบันดาลใจในการทำงาน</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">3. รูปแบบการจัดฝึกอบรมที่ท่านคิดว่าจะส่งผลต่อการนำไปใช้งานจริงได้มากที่สุด <span class="limit-hint">(เลือก 2 อันดับแรก)</span></label>
+      <div class="options-list" data-max="2">
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="การอบรมเชิงปฏิบัติการในห้องฝึกอบรมและฝึกปฏิบัติจริง (On-site Workshop)"> การอบรมเชิงปฏิบัติการในห้องฝึกอบรมและฝึกปฏิบัติจริง (On-site Workshop)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="การลงพื้นที่ฝึกปฏิบัติจริงในชุมชนต้นแบบ (Learning by Doing)"> การลงพื้นที่ฝึกปฏิบัติจริงในชุมชนต้นแบบ (Learning by Doing)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="การอบรมแบบผสมผสาน"> การอบรมแบบผสมผสาน</label>
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="บทเรียนออนไลน์เรียนรู้ด้วยตนเองแบบสั้น (Microlearning E-learning: คลิปละ 10-15 นาที)"> บทเรียนออนไลน์เรียนรู้ด้วยตนเองแบบสั้น (Microlearning E-learning: คลิปละ 10-15 นาที)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="การเป็นพี่เลี้ยงและการให้คำปรึกษาหน้างาน (Coaching & On-the-job Mentoring)"> การเป็นพี่เลี้ยงและการให้คำปรึกษาหน้างาน (Coaching & On-the-job Mentoring)</label>
+        <label class="option-item"><input type="checkbox" name="acad_q3" value="ชุมชนนักปฏิบัติเพื่อแลกเปลี่ยนเรียนรู้ (Community of Practice: CoP)"> ชุมชนนักปฏิบัติเพื่อแลกเปลี่ยนเรียนรู้ (Community of Practice: CoP)</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">4. ระยะเวลาที่เหมาะสมที่สุดสำหรับการฝึกอบรมแบบ On-site ณ ศพช.ลำปาง</label>
+      <div class="options-list">
+        <label class="option-item"><input type="radio" name="acad_q4" value="1 วัน"> 1 วัน</label>
+        <label class="option-item"><input type="radio" name="acad_q4" value="2 วัน"> 2 วัน</label>
+        <label class="option-item"><input type="radio" name="acad_q4" value="3 วัน"> 3 วัน</label>
+        <label class="option-item"><input type="radio" name="acad_q4" value="มากกว่า 3 วันขึ้นไป"> มากกว่า 3 วันขึ้นไป</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">5. ข้อเสนอแนะเพิ่มเติมต่อ ศพช.ลำปาง ในการยกระดับบริการ สภาพแวดล้อมการเรียนรู้ หรือการหนุนเสริมการทำงานในพื้นที่</label>
+      <textarea name="acad_q5" rows="3"></textarea>
+    </div>
+
+
+    <!-- ==================== กลุ่มงานวิจัยและพัฒนาชุมชนเชิงพื้นที่ ==================== -->
+    <div class="section-title">ส่วนที่ 3: กลุ่มงานวิจัยและพัฒนาชุมชนเชิงพื้นที่</div>
+
+    <div class="sub-section-title">ข้อมูลทั่วไป</div>
+
+    <div class="form-group">
+      <label class="form-label">1. หน่วยงานของท่าน</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div>
+          <label style="font-size: 13px; color: #555;">ระดับสำนักงานพัฒนาชุมชนจังหวัด:</label>
+          <select name="research_org_prov">
+            <option value="">-- เลือกจังหวัด (ถ้าสังกัด สพจ.) --</option>
+            <option value="สพจ.แม่ฮ่องสอน">สพจ.แม่ฮ่องสอน</option>
+            <option value="สพจ.เชียงใหม่">สพจ.เชียงใหม่</option>
+            <option value="สพจ.ลำพูน">สพจ.ลำพูน</option>
+            <option value="สพจ.ลำปาง">สพจ.ลำปาง</option>
+            <option value="สพจ.แพร่">สพจ.แพร่</option>
+            <option value="สพจ.น่าน">สพจ.น่าน</option>
+            <option value="สพจ.พะเยา">สพจ.พะเยา</option>
+            <option value="สพจ.เชียงราย">สพจ.เชียงราย</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 13px; color: #555;">ระดับสำนักงานพัฒนาชุมชนอำเภอ:</label>
+          <select name="research_org_dist">
+            <option value="">-- เลือกจังหวัดที่อำเภอสังกัด --</option>
+            <option value="สพอ. ใน จ.แม่ฮ่องสอน">สพอ. ใน จ.แม่ฮ่องสอน</option>
+            <option value="สพอ. ใน จ.เชียงใหม่">สพอ. ใน จ.เชียงใหม่</option>
+            <option value="สพอ. ใน จ.ลำพูน">สพอ. ใน จ.ลำพูน</option>
+            <option value="สพอ. ใน จ.ลำปาง">สพอ. ใน จ.ลำปาง</option>
+            <option value="สพอ. ใน จ.แพร่">สพอ. ใน จ.แพร่</option>
+            <option value="สพอ. ใน จ.น่าน">สพอ. ใน จ.น่าน</option>
+            <option value="สพอ. ใน จ.พะเยา">สพอ. ใน จ.พะเยา</option>
+            <option value="สพอ. ใน จ.เชียงราย">สพอ. ใน จ.เชียงราย</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">2. กลุ่มงานหรือภารกิจที่ท่านรับผิดชอบเกี่ยวข้องกับเรื่องใดบ้าง (เลือกได้หลายข้อ)</label>
+      <div class="options-list">
+        <label class="option-item"><input type="checkbox" name="research_q2" value="OTOP PLUS"> OTOP PLUS</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="หมู่บ้านทุนชุมชน / กองทุนแม่ของแผ่นดิน"> หมู่บ้านทุนชุมชน / กองทุนแม่ของแผ่นดิน</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="ชุมชนยั่งยืน / โคก หนอง นา"> ชุมชนยั่งยืน / โคก หนอง นา</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="สารสนเทศชุมชน / ข้อมูล จปฐ."> สารสนเทศชุมชน / ข้อมูล จปฐ.</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="กองทุนพัฒนาบทบาทสตรี"> กองทุนพัฒนาบทบาทสตรี</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="การพัฒนานวัตกรรมองค์กร / CDCA"> การพัฒนานวัตกรรมองค์กร / CDCA</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="งานวิจัย การจัดการความรู้ และการพัฒนาศักยภาพบุคลากร"> งานวิจัย การจัดการความรู้ และการพัฒนาศักยภาพบุคลากร</label>
+        <label class="option-item"><input type="checkbox" name="research_q2" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="sub-section-title">ปัญหาและความท้าทาย</div>
+
+    <div class="form-group">
+      <label class="form-label">3. ในการขับเคลื่อนงานพัฒนาชุมชน ปีงบประมาณ พ.ศ. 2570 ท่านพบปัญหาหรือข้อจำกัดใดที่ต้องการการสนับสนุนจาก ศพช.ลำปาง มากที่สุด</label>
+      <div class="options-list">
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ขาดองค์ความรู้ แนวทางปฏิบัติ หรือคู่มือที่นำไปใช้ได้ทันที"> ขาดองค์ความรู้ แนวทางปฏิบัติ หรือคู่มือที่นำไปใช้ได้ทันที</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ขาดเครื่องมือหรือนวัตกรรมที่ช่วยลดขั้นตอนการทำงาน"> ขาดเครื่องมือหรือนวัตกรรมที่ช่วยลดขั้นตอนการทำงาน</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ต้องการพัฒนาทักษะการใช้ AI และเทคโนโลยีดิจิทัล"> ต้องการพัฒนาทักษะการใช้ AI และเทคโนโลยีดิจิทัล</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ขาดแนวทางวิเคราะห์ข้อมูลและแสดงผลลัพธ์การดำเนินงาน"> ขาดแนวทางวิเคราะห์ข้อมูลและแสดงผลลัพธ์การดำเนินงาน</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ต้องการตัวอย่างผลงานต้นแบบหรือ Best Practice จากจังหวัดอื่น"> ต้องการตัวอย่างผลงานต้นแบบหรือ Best Practice จากจังหวัดอื่น</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ต้องการคำปรึกษาจากผู้เชี่ยวชาญเฉพาะด้าน"> ต้องการคำปรึกษาจากผู้เชี่ยวชาญเฉพาะด้าน</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="ขาดโอกาสแลกเปลี่ยนเรียนรู้ระหว่างจังหวัด"> ขาดโอกาสแลกเปลี่ยนเรียนรู้ระหว่างจังหวัด</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="มีภาระงานรายงานหรือจัดทำข้อมูลซ้ำซ้อน"> มีภาระงานรายงานหรือจัดทำข้อมูลซ้ำซ้อน</label>
+        <label class="option-item"><input type="checkbox" name="research_q3" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">4. จากปัญหาที่เลือกข้างต้น เรื่องใดเป็นเรื่องเร่งด่วนที่สุด และส่งผลกระทบต่อการทำงานอย่างไร</label>
+      <textarea name="research_q4" rows="2" placeholder="ระบุเรื่องเร่งด่วนและผลกระทบ..."></textarea>
+    </div>
+
+    <div class="sub-section-title">ความต้องการรับการสนับสนุน</div>
+
+    <div class="form-group">
+      <label class="form-label">5. ท่านต้องการให้ ศพช.ลำปาง สนับสนุนการทำงานในรูปแบบใดบ้าง (เลือกได้หลายข้อ)</label>
+      <div class="options-list">
+        <label class="option-item"><input type="checkbox" name="research_q5" value="จัดทำคู่มือหรือชุดเครื่องมือพร้อมใช้"> จัดทำคู่มือหรือชุดเครื่องมือพร้อมใช้</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="พัฒนาสื่อการเรียนรู้ เช่น E-Book, E-Learning หรือคลิปสั้น"> พัฒนาสื่อการเรียนรู้ เช่น E-Book, E-Learning หรือคลิปสั้น</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="พัฒนาเครื่องมือดิจิทัลหรือ AI ช่วยลดภาระงาน"> พัฒนาเครื่องมือดิจิทัลหรือ AI ช่วยลดภาระงาน</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="สนับสนุนการวิเคราะห์ข้อมูลและจัดทำ Dashboard จากข้อมูลที่มีอยู่"> สนับสนุนการวิเคราะห์ข้อมูลและจัดทำ Dashboard จากข้อมูลที่มีอยู่</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="ให้คำปรึกษาหรือเป็นพี่เลี้ยงในการแก้ปัญหาเฉพาะเรื่อง"> ให้คำปรึกษาหรือเป็นพี่เลี้ยงในการแก้ปัญหาเฉพาะเรื่อง</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="รวบรวมและถ่ายทอด Best Practice จากพื้นที่ต้นแบบ"> รวบรวมและถ่ายทอด Best Practice จากพื้นที่ต้นแบบ</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="จัดเวทีแลกเปลี่ยนเรียนรู้ระหว่าง 8 จังหวัด"> จัดเวทีแลกเปลี่ยนเรียนรู้ระหว่าง 8 จังหวัด</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="สนับสนุนการพัฒนานวัตกรรมและการจัดทำผลงาน CDCA"> สนับสนุนการพัฒนานวัตกรรมและการจัดทำผลงาน CDCA</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="สนับสนุนการออกแบบหลักสูตรหรือกิจกรรมพัฒนาศักยภาพบุคลากร"> สนับสนุนการออกแบบหลักสูตรหรือกิจกรรมพัฒนาศักยภาพบุคลากร</label>
+        <label class="option-item"><input type="checkbox" name="research_q5" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">6. หากเลือกเรื่องที่ต้องการรับการสนับสนุนได้เพียง 1 เรื่อง ท่านต้องการให้ ศพช.ลำปาง ช่วยเรื่องใดมากที่สุด</label>
+      <select name="research_q6">
+        <option value="">-- โปรดเลือก 1 เรื่องที่ต้องการมากที่สุด --</option>
+        <option value="จัดทำคู่มือหรือชุดเครื่องมือพร้อมใช้">จัดทำคู่มือหรือชุดเครื่องมือพร้อมใช้</option>
+        <option value="พัฒนาสื่อการเรียนรู้ เช่น E-Book, E-Learning หรือคลิปสั้น">พัฒนาสื่อการเรียนรู้ เช่น E-Book, E-Learning หรือคลิปสั้น</option>
+        <option value="พัฒนาเครื่องมือดิจิทัลหรือ AI ช่วยลดภาระงาน">พัฒนาเครื่องมือดิจิทัลหรือ AI ช่วยลดภาระงาน</option>
+        <option value="สนับสนุนการวิเคราะห์ข้อมูลและจัดทำ Dashboard จากข้อมูลที่มีอยู่">สนับสนุนการวิเคราะห์ข้อมูลและจัดทำ Dashboard จากข้อมูลที่มีอยู่</option>
+        <option value="ให้คำปรึกษาหรือเป็นพี่เลี้ยงในการแก้ปัญหาเฉพาะเรื่อง">ให้คำปรึกษาหรือเป็นพี่เลี้ยงในการแก้ปัญหาเฉพาะเรื่อง</option>
+        <option value="รวบรวมและถ่ายทอด Best Practice จากพื้นที่ต้นแบบ">รวบรวมและถ่ายทอด Best Practice จากพื้นที่ต้นแบบ</option>
+        <option value="จัดเวทีแลกเปลี่ยนเรียนรู้ระหว่าง 8 จังหวัด">จัดเวทีแลกเปลี่ยนเรียนรู้ระหว่าง 8 จังหวัด</option>
+        <option value="สนับสนุนการพัฒนานวัตกรรมและการจัดทำผลงาน CDCA">สนับสนุนการพัฒนานวัตกรรมและการจัดทำผลงาน CDCA</option>
+        <option value="สนับสนุนการออกแบบหลักสูตรหรือกิจกรรมพัฒนาศักยภาพบุคลากร">สนับสนุนการออกแบบหลักสูตรหรือกิจกรรมพัฒนาศักยภาพบุคลากร</option>
+        <option value="อื่นๆ">อื่น ๆ</option>
+      </select>
+    </div>
+
+    <div class="sub-section-title">รูปแบบการสนับสนุนที่เหมาะสม</div>
+
+    <div class="form-group">
+      <label class="form-label">7. ท่านสะดวกรับการสนับสนุนจาก ศพช.ลำปาง ในรูปแบบใดมากที่สุด</label>
+      <div class="options-list">
+        <label class="option-item"><input type="radio" name="research_q7" value="ชุดเครื่องมือหรือคู่มือที่นำไปใช้ได้ทันที"> ชุดเครื่องมือหรือคู่มือที่นำไปใช้ได้ทันที</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="สื่อออนไลน์ที่ศึกษาได้ด้วยตนเอง"> สื่อออนไลน์ที่ศึกษาได้ด้วยตนเอง</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="การให้คำปรึกษารายประเด็นผ่านระบบออนไลน์"> การให้คำปรึกษารายประเด็นผ่านระบบออนไลน์</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="การแลกเปลี่ยนเรียนรู้ระหว่างจังหวัด"> การแลกเปลี่ยนเรียนรู้ระหว่างจังหวัด</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="การลงพื้นที่ให้คำปรึกษาเฉพาะเรื่อง"> การลงพื้นที่ให้คำปรึกษาเฉพาะเรื่อง</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="การอบรมเชิงปฏิบัติการเฉพาะเรื่องที่จำเป็น"> การอบรมเชิงปฏิบัติการเฉพาะเรื่องที่จำเป็น</label>
+        <label class="option-item"><input type="radio" name="research_q7" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">8. ปัจจัยใดจะทำให้การสนับสนุนเกิดประโยชน์สูงสุด โดยไม่เพิ่มภาระให้จังหวัด <span class="limit-hint">(เลือกได้ไม่เกิน 2 ข้อ)</span></label>
+      <div class="options-list" data-max="2">
+        <label class="option-item"><input type="checkbox" name="research_q8" value="ใช้ข้อมูลหรือรายงานที่จังหวัดมีอยู่แล้ว"> ใช้ข้อมูลหรือรายงานที่จังหวัดมีอยู่แล้ว</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="ไม่เพิ่มแบบฟอร์มหรือระบบรายงานใหม่"> ไม่เพิ่มแบบฟอร์มหรือระบบรายงานใหม่</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="มีเครื่องมือพร้อมใช้และคำแนะนำที่ชัดเจน"> มีเครื่องมือพร้อมใช้และคำแนะนำที่ชัดเจน</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="สามารถเลือกใช้ได้ตามบริบทและความพร้อมของแต่ละจังหวัด"> สามารถเลือกใช้ได้ตามบริบทและความพร้อมของแต่ละจังหวัด</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="ลดขั้นตอนและระยะเวลาการทำงานได้จริง"> ลดขั้นตอนและระยะเวลาการทำงานได้จริง</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="มีผู้ให้คำปรึกษาเมื่อพบปัญหา"> มีผู้ให้คำปรึกษาเมื่อพบปัญหา</label>
+        <label class="option-item"><input type="checkbox" name="research_q8" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">9. ท่านเห็นว่าการสนับสนุนจาก ศพช.ลำปาง ควรช่วยให้เกิดผลลัพธ์ใดมากที่สุด <span class="limit-hint">(เลือกได้ไม่เกิน 2 ข้อ)</span></label>
+      <div class="options-list" data-max="2">
+        <label class="option-item"><input type="checkbox" name="research_q9" value="ลดระยะเวลาหรือขั้นตอนการทำงานของเจ้าหน้าที่"> ลดระยะเวลาหรือขั้นตอนการทำงานของเจ้าหน้าที่</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="เพิ่มประสิทธิภาพและความถูกต้องของข้อมูล"> เพิ่มประสิทธิภาพและความถูกต้องของข้อมูล</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="ยกระดับคุณภาพการดำเนินงานตามประเด็น 5+1"> ยกระดับคุณภาพการดำเนินงานตามประเด็น 5+1</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="เพิ่มการนำองค์ความรู้และนวัตกรรมไปใช้จริง"> เพิ่มการนำองค์ความรู้และนวัตกรรมไปใช้จริง</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="ขยายผลแนวปฏิบัติที่ดีระหว่างจังหวัด"> ขยายผลแนวปฏิบัติที่ดีระหว่างจังหวัด</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="มีหลักฐานเชิงประจักษ์สำหรับแสดงผลสำเร็จและพัฒนานวัตกรรม CDCA"> มีหลักฐานเชิงประจักษ์สำหรับแสดงผลสำเร็จและพัฒนานวัตกรรม CDCA</label>
+        <label class="option-item"><input type="checkbox" name="research_q9" value="อื่นๆ"> อื่น ๆ</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">10. มีภารกิจ ปัญหา หรือแนวคิดนวัตกรรมใดที่ท่านอยากเสนอให้ ศพช.ลำปาง เข้าไปสนับสนุนเพิ่มเติม</label>
+      <textarea name="research_q10" rows="3" placeholder="ระบุภารกิจ ปัญหา หรือข้อเสนอแนะนวัตกรรม..."></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">บันทึกข้อมูลแบบสำรวจ</button>
+    <div id="submission-status"></div>
+  </form>
+</div>
+
+<script>
+  // ระบบจำกัดจำนวนตัวเลือก checkbox ตาม data-max
+  document.querySelectorAll('.options-list[data-max]').forEach(group => {
+    const max = parseInt(group.getAttribute('data-max'));
+    const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const checkedCount = group.querySelectorAll('input[type="checkbox"]:checked').length;
+        if (checkedCount >= max) {
+          checkboxes.forEach(item => {
+            if (!item.checked) item.disabled = true;
+          });
+        } else {
+          checkboxes.forEach(item => item.disabled = false);
+        }
+      });
+    });
+  });
+
+  // ตัวอย่างการกดส่งข้อมูล
+  const form = document.getElementById('surveyForm');
+  const statusBox = document.getElementById('submission-status');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // แสดงข้อความเมื่อส่งสำเร็จ
+    statusBox.className = 'status-success';
+    statusBox.style.display = 'block';
+    statusBox.innerText = 'บันทึกข้อมูลแบบสำรวจของ ศพช.ลำปาง เรียบร้อยแล้ว ขอบคุณสำหรับข้อมูลครับ';
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
