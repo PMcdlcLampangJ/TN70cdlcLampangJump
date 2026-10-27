@@ -513,22 +513,28 @@
       });
     });
   });
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqsEcYJ80_9bdA3rwNUSqSLKV9vNlHaOD5LGj_6jOnNiVFD4blsTdW6_SKXEDAKpoE/exec';
 
-  // ตัวอย่างการกดส่งข้อมูล
   const form = document.getElementById('surveyForm');
   const statusBox = document.getElementById('submission-status');
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    // แสดงข้อความเมื่อส่งสำเร็จ
     statusBox.className = 'status-success';
     statusBox.style.display = 'block';
-    statusBox.innerText = 'บันทึกข้อมูลแบบสำรวจของ ศพช.ลำปาง เรียบร้อยแล้ว ขอบคุณสำหรับข้อมูลครับ';
+    statusBox.innerText = 'กำลังบันทึกข้อมูล กรุณารอสักครู่...';
 
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: new FormData(form)
+    })
+    .then(response => {
+      statusBox.innerText = 'บันทึกข้อมูลแบบสำรวจของ ศพช.ลำปาง เรียบร้อยแล้ว ขอบคุณสำหรับข้อมูลครับ';
+      form.reset();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    })
+    .catch(error => {
+      statusBox.style.color = '#d9534f';
+      statusBox.innerText = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง';
+    });
   });
-</script>
-
-</body>
-</html>
