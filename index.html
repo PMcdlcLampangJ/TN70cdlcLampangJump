@@ -180,6 +180,11 @@
       transform: translateY(-1px);
     }
 
+    .btn-submit:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
     #submission-status {
       display: none;
       padding: 16px;
@@ -193,6 +198,18 @@
       background: #e8f5e9;
       color: var(--success);
       border: 1px solid #c8e6c9;
+    }
+
+    .status-loading {
+      background: #e3f2fd;
+      color: var(--primary);
+      border: 1px solid #bbdefb;
+    }
+
+    .status-error {
+      background: #ffebee;
+      color: var(--error);
+      border: 1px solid #ffcdd2;
     }
   </style>
 </head>
@@ -489,7 +506,7 @@
       <textarea name="research_q10" rows="3" placeholder="ระบุภารกิจ ปัญหา หรือข้อเสนอแนะนวัตกรรม..."></textarea>
     </div>
 
-    <button type="submit" class="btn-submit">บันทึกข้อมูลแบบสำรวจ</button>
+    <button type="submit" id="submitBtn" class="btn-submit">บันทึกข้อมูลแบบสำรวจ</button>
     <div id="submission-status"></div>
   </form>
 </div>
@@ -513,28 +530,62 @@
       });
     });
   });
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqsEcYJ80_9bdA3rwNUSqSLKV9vNlHaOD5LGj_6jOnNiVFD4blsTdW6_SKXEDAKpoE/exec';
+
+  // URL Google Web App
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqsEcYJ80_9bdA3rwNUSqSLKV9vNlHaOD5LGj_6jOnNiVFD4blsTdW6_SKXEDAKpoE/exec';
 
   const form = document.getElementById('surveyForm');
   const statusBox = document.getElementById('submission-status');
+  const submitBtn = document.getElementById('submitBtn');
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    statusBox.className = 'status-success';
+
+    // แสดงสถานะกำลังบันทึก
+    submitBtn.disabled = true;
+    statusBox.className = 'status-loading';
     statusBox.style.display = 'block';
     statusBox.innerText = 'กำลังบันทึกข้อมูล กรุณารอสักครู่...';
 
+    // รวบรวมข้อมูลทั้งหมดเป็น Object JSON (จัดการทั้ง Checkbox และข้อความ)
+    const formData = new FormData(form);
+    const dataObj = {};
+
+    formData.forEach((value, key) => {
+      if (dataObj[key]) {
+        // หากเป็น checkbox ที่เลือกได้หลายตัว ให้คั่นด้วยเครื่องหมายจุลภาค
+        dataObj[key] = dataObj[key] + ', ' + value;
+      } else {
+        dataObj[key] = value;
+      }
+    });
+
+    // ส่งข้อมูลแบบ POST ด้วยโหมด no-cors (เพื่อป้องกันปัญหาเรื่องเบราว์เซอร์บล็อกข้อมูล)
     fetch(SCRIPT_URL, {
       method: 'POST',
-      body: new FormData(form)
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(dataObj)
     })
-    .then(response => {
-      statusBox.innerText = 'บันทึกข้อมูลแบบสำรวจของ ศพช.ลำปาง เรียบร้อยแล้ว ขอบคุณสำหรับข้อมูลครับ';
+    .then(() => {
+      statusBox.className = 'status-success';
+      statusBox.innerText = '✅ บันทึกข้อมูลแบบสำรวจของ ศพช.ลำปาง เรียบร้อยแล้ว ขอบคุณสำหรับข้อมูลครับ';
       form.reset();
+      submitBtn.disabled = false;
+      
+      // ปลดล็อก checkbox ทุกช่องกลับคืนสภาพเดิม
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     })
     .catch(error => {
-      statusBox.style.color = '#d9534f';
-      statusBox.innerText = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง';
+      submitBtn.disabled = false;
+      statusBox.className = 'status-error';
+      statusBox.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง';
     });
   });
+</script>
+
+</body>
+</html>
